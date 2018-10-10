@@ -1,4 +1,5 @@
 
+add_commit_push.sh
 initial_structure_Yshaped_hydrogel/*.pyc
 initial_structure_Yshaped_hydrogel/input_data_*
 initial_structure_Yshaped_hydrogel/rawdata_*
