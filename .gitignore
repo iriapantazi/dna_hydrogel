@@ -1,7 +1,7 @@
 
-*.pyc
-input_data_*
-rawdata_*
+initial_structure_Yshaped_hydrogel/*.pyc
+initial_structure_Yshaped_hydrogel/input_data_*
+initial_structure_Yshaped_hydrogel/rawdata_*
 
 
 
