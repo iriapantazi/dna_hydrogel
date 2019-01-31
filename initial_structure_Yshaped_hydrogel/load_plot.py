@@ -2,7 +2,7 @@
 # Iria Pantazi 20180516
 #
 # since pickle does not work as expected, load_plot will load the plots from the 
-# input file given, and will replot them. It's faster that recalculating.
+# input file given, and will replot them. It's faster than recalculating.
 # The date are taken from rawdata_${Nmolecules}_${boxSize}
 
 from importing_modules import *
