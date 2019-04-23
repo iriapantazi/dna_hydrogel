@@ -1,15 +1,17 @@
-#! /usr/bin/python2.7
+#! /usr/bin/python
 
 
 import math
 import numpy as np
-np.set_printoptions(threshold=np.nan)
-from numpy import linalg as LA
-import scipy
-import random
-from   random import random
+from numpy  import linalg as LA
+from random import random
 from pyquaternion import Quaternion
 
+#
+#np.set_printoptions(threshold=np.nan)
+#import scipy
+#import random
+#
 
 
 #--- changed for nunchunks
@@ -18,7 +20,7 @@ def within_box(ghost,box_lim):
     toBreak = False
     for i in range(0,10,9): #to check only the edge beads
         for j in range(3):
-            if (abs(ghost[i][j]) > box_lim):
+            if (abs(ghost[i][j] > box_lim)):
                 print("out")
                 flag = False
                 toBreak = True
@@ -27,11 +29,6 @@ def within_box(ghost,box_lim):
             break
     return(flag);
 #-----------------------------------------------------------
-
-
-
-
-
 
 
 
@@ -65,12 +62,8 @@ def they_overlap(ghost,accepted,mol,rad):
     for k in range(mol):
         for i in lista:
             for j in lista:
-                # veltistopoihsh
                 dist = np.linalg.norm(accepted[10*k+i]-ghost[j])
-                #dist = math.sqrt((accepted[10*k+i][0]-ghost[j][0])**2 + \
-                #                 (accepted[10*k+i][1]-ghost[j][1])**2 + \
-                #                 (accepted[10*k+i][2]-ghost[j][2])**2 )
-                if (dist < 3*rad ):
+                if (dist < 2*rad ):
                     break_flag  = True
                     overlap = True
                     break;
@@ -93,7 +86,7 @@ def they_overlap(ghost,accepted,mol,rad):
 
 
 #--- changed for nunchunks
-def gen_ghost(box_limit,dist,rad):
+def gen_ghost(box_limit,dist):
     ghost = np.zeros((10,3))
 
     #center 0
@@ -168,16 +161,14 @@ def plot_all(accepted,n_mol,box_lim):
     z_list = [row[2] for row in accepted]
 
 
-    #cols_b = cm.Blues(np.linspace(0, 10, 1000)/5)
-    #cols_l = cm.Reds(np.linspace(0, 6,  900)/4)
 
 
     cols = cm.seismic(np.linspace(0, 10, 10*n_mol)/10)
 
-    for i in range(n_mol):
-        colour.extend(("c","m","m","r","m","m","r","m","m","r")) if \
-                                                   (i % 2 ==1) else \
-        colour.extend(("c","m","m","b","m","m","b","m","m","b"))
+    #for i in range(n_mol):
+    #    colour.extend(("c","m","m","r","m","m","r","m","m","r")) if \
+    #                                               (i % 2 ==1) else \
+    #    colour.extend(("c","m","m","b","m","m","b","m","m","b"))
     
     fig = plt.figure()
     ax  = fig.add_subplot(111, projection='3d')

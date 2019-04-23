@@ -1,38 +1,27 @@
-#! /usr/bin/python2.7
+#! /usr/bin/python 
 
-from importing_modules import *
-from functions import *
-from print_formatted import *
-#from parseArguments import *
+
+import time
 import argparse
-
-######## Load many input #######
-parser = argparse.ArgumentParser(description='generate configuration of Y-shapes')
-#------1
-parser.add_argument("-g","--generate",\
-nargs="+",default=None,\
-help="generate new configuration from scratsch.")
-#------2
-parser.add_argument("-r","--replot",nargs="+",\
-help="Replots proexisting configurations from files of the form xyz.\
-        input required: filename(str),n_molecules(int),box_limit(float)")
-#------3
-parser.add_argument("-s","--steady_state",nargs="+",\
-help="generate after reached steady state.")
-#------
+parser = argparse.ArgumentParser(description='generate nunchunks of 10 beads')
+parser.add_argument("-g","--generate",nargs="+",default=None,help="generate new configuration from scratsch.")
+parser.add_argument("-r","--replot",nargs="+",help="Replots what has been written in the rawdata files.")
 args=parser.parse_args()
 
 
 if args.generate: 
 
+    from functions import gen_ghost,within_box,they_overlap,perform_rand_rot,plot_all
+    from print_formatted import print_formatted_file
+    from constants import mass,dist,rad
+    import numpy as np
+    from shutil import copyfile
+
     #inititalsation
     n_molecules = int(args.generate[0])
     box_limit = float(args.generate[1])/2.0
-    mass = 1.0
-    dist = 0.98
-    rad  = 0.56
+
     rot_threshold = 500
-    
     ghost_mol = np.zeros((10,3))
     accpt_mol = np.zeros((10*n_molecules,3))
     
@@ -40,9 +29,9 @@ if args.generate:
     start_time = time.time()
     
     #first one is always accepted
-    ghost_mol = gen_ghost(box_limit,dist,rad)
+    ghost_mol = gen_ghost(box_limit,dist)
     while ( within_box(ghost_mol,box_limit) == False ):
-        ghost_mol = gen_ghost(box_limit,dist,rad)
+        ghost_mol = gen_ghost(box_limit,dist)
     
     
     for i in range(10):
@@ -55,17 +44,13 @@ if args.generate:
     while (mol < n_molecules ):
     
         #----------------------generate ghost molecule--------------------
-        ghost_mol = gen_ghost(box_limit,dist,rad)
+        ghost_mol = gen_ghost(box_limit,dist)
         while ( within_box(ghost_mol,box_limit) == False ): 
-            ghost_mol = gen_ghost(box_limit,dist,rad)
-            #ghost_mol = perform_rand_rot(ghost_mol)
-    
-    
-    
+            ghost_mol = gen_ghost(box_limit,dist)
     
         #----------------------check overlaping---------------------------
         #-------------------and perform a mx of 200 rots-------------------
-        flag = they_overlap(ghost_mol,accpt_mol,mol,rad)    
+        flag = they_overlap(ghost_mol,accpt_mol,mol,rad)
         attempt_num = 0
     
         while  (flag == True):
@@ -75,9 +60,9 @@ if args.generate:
                 break;
             ghost_mol = perform_rand_rot(ghost_mol)
             while ( within_box(ghost_mol,box_limit) == False ):
-                ghost_mol = gen_ghost(box_limit,dist,rad)
-                #ghost_mol = perform_rand_rot(ghost_mol)
-            flag = they_overlap(ghost_mol,accpt_mol,mol,rad)
+                ghost_mol = gen_ghost(box_limit,dist)
+
+            flag = they_overlap(ghost_mol,accpt_mol,mol,0.56)
     
                 
     
@@ -88,7 +73,7 @@ if args.generate:
         if (flag == False):
             for i in range(10):
                 accpt_mol[10*mol+i] = ghost_mol[i]
-        print mol
+        print(mol)
     
     
     
@@ -111,6 +96,7 @@ if args.generate:
     
     #--------------------------print all-------------------------------- 
     print_formatted_file(accpt_mol,n_molecules,box_limit,mass)
+    print('done')
     
     with open('accepted.dat','w') as f:
         string_accpt_mol = str(accpt_mol).replace('[','').replace(']','')
@@ -122,15 +108,16 @@ if args.generate:
     
     #---------------- rename the input_data.file ------------------------    
     src = "input_data.file"
-    dst = "files/input_data_angle_freedom_"+str(n_molecules)+"_"+str((box_limit)*2)+".file"
+    dst = "files/input_data_nunchucks_"+str(n_molecules)+"_"+str((box_limit)*2)+".file"
     copyfile(src,dst)
     
 
 
 if args.replot:
-    infile,n_molecules,box_limit = args.replot
+    n_molecules,box_limit = args.replot
     n_molecules = int(n_molecules)
     box_limit   = float(box_limit)
+    infiles     =  "files/rawdata_"+str(n_molecules)+"_"+str((box_limit)*2)
 
     #------------------- initialisation ---------------------
     accepted = np.zeros((10*n_molecules,3))
