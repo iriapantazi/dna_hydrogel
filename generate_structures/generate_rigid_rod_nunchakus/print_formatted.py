@@ -77,13 +77,13 @@ def print_formatted_file(acc,n_molecules,box_limit,mass):
         g.write("Angles \n\n")
         for i in range(0,n_molecules,1):
             # N angle-type atom1-atom2(central)-atom3
-            g.write("\t %d %d %d %d %d \n" % (9*i+1,1,10*i+1,10*i+2,10*i+3 ))
-            g.write("\t %d %d %d %d %d \n" % (9*i+2,2,10*i+2,10*i+3,10*i+4 ))
-            g.write("\t %d %d %d %d %d \n" % (9*i+3,3,10*i+3,10*i+4,10*i+5 ))
-            g.write("\t %d %d %d %d %d \n" % (9*i+4,4,10*i+4,10*i+5,10*i+6 ))
-            g.write("\t %d %d %d %d %d \n" % (9*i+5,5,10*i+5,10*i+6,10*i+7 ))
-            g.write("\t %d %d %d %d %d \n" % (9*i+6,6,10*i+6,10*i+7,10*i+8 ))
-            g.write("\t %d %d %d %d %d \n" % (9*i+7,7,10*i+7,10*i+8,10*i+9 ))
-            g.write("\t %d %d %d %d %d \n" % (9*i+8,8,10*i+8,10*i+9,10*i+910))
+            g.write("\t %d %d %d %d %d \n" % (8*i+1,1,10*i+1,10*i+2,10*i+3 ))
+            g.write("\t %d %d %d %d %d \n" % (8*i+2,2,10*i+2,10*i+3,10*i+4 ))
+            g.write("\t %d %d %d %d %d \n" % (8*i+3,3,10*i+3,10*i+4,10*i+5 ))
+            g.write("\t %d %d %d %d %d \n" % (8*i+4,4,10*i+4,10*i+5,10*i+6 ))
+            g.write("\t %d %d %d %d %d \n" % (8*i+5,5,10*i+5,10*i+6,10*i+7 ))
+            g.write("\t %d %d %d %d %d \n" % (8*i+6,6,10*i+6,10*i+7,10*i+8 ))
+            g.write("\t %d %d %d %d %d \n" % (8*i+7,7,10*i+7,10*i+8,10*i+9 ))
+            g.write("\t %d %d %d %d %d \n" % (8*i+8,8,10*i+8,10*i+9,10*i+10))
 
     return();
