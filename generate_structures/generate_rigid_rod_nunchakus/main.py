@@ -3,8 +3,10 @@
 import time
 import argparse
 parser = argparse.ArgumentParser(description='generate nunchunks of 10 beads')
-parser.add_argument("-g","--generate",nargs="+",default=None,help="generate new configuration from scratsch.")
-parser.add_argument("-r","--replot",nargs="+",help="Replots what has been written in the rawdata files.")
+parser.add_argument("-g", "--generate", nargs="+", default=None, help="generate new configuration from scratsch.")
+parser.add_argument("-r", "--replot", nargs="+", help="Replots what has been written in the rawdata files.")
+parser.add_argument("-a", "--analyse", nargs="+", help="to be included shortly")
+parser.add_argument("-d", "--rdf", nargs="+", help="to be included shortly")
 args=parser.parse_args()
 import math
 import numpy as np
@@ -13,18 +15,18 @@ from random import random
 from pyquaternion import Quaternion
 
 
-mass = 1.0                                                                                                                                                                              
+mass = 1.0 
 dist = 0.98
 rad  = 0.56
 
 
-#--- changed for nunchunks
 def within_box(ghost,box_lim):
     flag = True
     toBreak = False
-    for i in range(0,10,9): #to check only the edge beads
+    for i in range(0,10,9): # check only the edge beads
         for j in range(3):
-            if (abs(ghost[i][j] > box_lim)):
+            print(i, j)
+            if (abs(ghost[i][j]) > box_lim):
                 print("out")
                 flag = False
                 toBreak = True
@@ -32,21 +34,16 @@ def within_box(ghost,box_lim):
         if (toBreak == True):
             break
     return(flag);
-#-----------------------------------------------------------
 
 
-#--- no need to change
 def perform_rand_rot(ghost):
     new_ghost = np.zeros((10,3))
     ran_rot = Quaternion.random()
     for i in range(10):
         new_ghost[i] = ran_rot.rotate(ghost[i])
-
     return(new_ghost);
-#-----------------------------------------------------------
 
 
-#--- changed for nunchunks
 def they_overlap(ghost,accepted,mol,rad):
     overlap = False
     lista = list(range(10))#[0,1,2,4,5,7,8]    
@@ -64,49 +61,38 @@ def they_overlap(ghost,accepted,mol,rad):
                 break
         if (break_flag == True):
             break
-
     return(overlap);
-#-----------------------------------------------------------
 
-#--- changed for nunchunks
+
 def gen_ghost(box_limit,dist):
     ghost = np.zeros((10,3))
-
     #center 0
     ghost[0][0] = 0
     ghost[0][1] = 0
     ghost[0][2] = 0
-        
     #tail of the next 9 beads
     for i in range(1,10,1):
         ghost[i]     = ghost[0]
         ghost[i][2] += i*dist
-    
     #preform random rotation 
     ran_rot = Quaternion.random()
     for i in range(10):
         ghost[i] = ran_rot.rotate(ghost[i])
-
     #preform random displacement
     ran_dis_x = (random() - 0.5e0)*2.0*(box_limit)
     ran_dis_y = (random() - 0.5e0)*2.0*(box_limit)
     ran_dis_z = (random() - 0.5e0)*2.0*(box_limit)
-
     for i in range(10):
         ghost[i][0] += ran_dis_x
         ghost[i][1] += ran_dis_y
         ghost[i][2] += ran_dis_z
-
     return(ghost);
-#-----------------------------------------------------------
 
-#--- changed for nunchunks
+
 def plot_all(accepted,n_mol,box_lim):
     import matplotlib.pyplot as plt
     #import itertools
     import pylab
-    
-    
     #from   itertools import product,imap
     #from   matplotlib.backends.backend_pdf import PdfPages
     import matplotlib.pylab as pylab
@@ -118,14 +104,10 @@ def plot_all(accepted,n_mol,box_lim):
               'ytick.labelsize':'x-large'}
     pylab.rcParams.update(params)
     import matplotlib.cm as cm
-    
-    
     from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
     from mpl_toolkits.axes_grid1.inset_locator import mark_inset
-    
     from mpl_toolkits.mplot3d.proj3d import proj_transform
     from matplotlib.text import Annotation
-    
     from mpl_toolkits.mplot3d import Axes3D
 
     colour = []
@@ -152,13 +134,11 @@ def print_formatted_file(acc,n_molecules,box_limit,mass):
 
     with open ("input_data.file","w") as g:
         g.write("LAMMPS nunchunk data file \n\n")
-
         atoms  =   10*n_molecules
         bonds  =    9*n_molecules
         angles =    8*n_molecules
         dihedrals = 0*n_molecules
         impropers = 0*n_molecules
-
         g.write("%d  atoms          \n" % atoms    )
         g.write("%d  bonds          \n" % bonds    ) 
         g.write("%d  angles         \n" % angles   ) 
@@ -233,41 +213,35 @@ def print_formatted_file(acc,n_molecules,box_limit,mass):
             g.write("\t %d %d %d %d %d \n" % (8*i+8,8,10*i+8,10*i+9,10*i+10))
 
     return();
+
 #-----------------------------------------------------------
-#----------------------------------------------------------- 
+
+
 
 if args.generate: 
 
     import numpy as np
     from shutil import copyfile
-
     #inititalsation
     n_molecules = int(args.generate[0])
     box_limit = float(args.generate[1])/2.0
-
     rot_threshold = 500
     ghost_mol = np.zeros((10,3))
     accpt_mol = np.zeros((10*n_molecules,3))
     
-    ##----
     start_time = time.time()
-    
     #first one is always accepted
     ghost_mol = gen_ghost(box_limit,dist)
     while ( within_box(ghost_mol,box_limit) == False ):
         ghost_mol = gen_ghost(box_limit,dist)
-    
     for i in range(10):
         accpt_mol[i] = ghost_mol[i]
-    
     mol = 1
     while (mol < n_molecules ):
-    
         #----------------------generate ghost molecule--------------------
         ghost_mol = gen_ghost(box_limit,dist)
         while ( within_box(ghost_mol,box_limit) == False ): 
             ghost_mol = gen_ghost(box_limit,dist)
-    
         #-------------check overlaping and perform a mx of 200 rots-----------
         flag = they_overlap(ghost_mol,accpt_mol,mol,rad)
         attempt_num = 0
@@ -280,19 +254,16 @@ if args.generate:
             while ( within_box(ghost_mol,box_limit) == False ):
                 ghost_mol = gen_ghost(box_limit,dist)
             flag = they_overlap(ghost_mol,accpt_mol,mol,0.56)
-    
-        #-------f not then add them to the list of accepted----------------
+        #-------if not then add them to the list of accepted----------------
         if (flag == False):
             for i in range(10):
                 accpt_mol[10*mol+i] = ghost_mol[i]
         print(mol)
-    
         #-----------------------move to next mol--------------------------
         mol +=1   
-    
     end_time=time.time()
     print("\n time for execution: "+str(end_time-start_time)+" seconds \n")
-    
+
     #---------------------------plot all------------------------------
     plot_all(accpt_mol,n_molecules,box_limit)    
     
@@ -305,19 +276,19 @@ if args.generate:
         f.writelines(string_accpt_mol+"\n")
     
     #--save a copy to be read by load_plot.py----------------------------
-    target_name = "files/rawdata_"+str(n_molecules)+"_"+str((box_limit)*2)
+    target_name = "rawdata_"+str(n_molecules)+"_"+str((box_limit)*2)
     copyfile('accepted.dat',target_name)
     
     #---------------- rename the input_data.file ------------------------    
     src = "input_data.file"
-    dst = "files/input_data_nunchucks_"+str(n_molecules)+"_"+str((box_limit)*2)+".file"
+    dst = "input_data_nunchucks_"+str(n_molecules)+"_"+str((box_limit)*2)+".file"
     copyfile(src,dst)
 
 if args.replot:
     n_molecules,box_limit = args.replot
     n_molecules = int(n_molecules)
     box_limit   = float(box_limit)
-    infiles     =  "files/rawdata_"+str(n_molecules)+"_"+str((box_limit)*2)
+    infiles     =  "rawdata_"+str(n_molecules)+"_"+str((box_limit)*2)
 
     #------------------- initialisation ---------------------
     accepted = np.zeros((10*n_molecules,3))
