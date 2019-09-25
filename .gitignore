@@ -1,7 +1,6 @@
 
 add_commit_push.sh
-initial_structure_Yshaped_hydrogel
-plot_from_lammps
+
 generate_structures/generate_rigid_rod_nunchakus/accepted.dat
 generate_structures/generate_rigid_rod_nunchakus/input_data.file
 generate_structures/generate_rigid_rod_nunchakus/input_data_nunchucks_*.file
