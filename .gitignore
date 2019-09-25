@@ -2,6 +2,9 @@
 add_commit_push.sh
 initial_structure_Yshaped_hydrogel
 plot_from_lammps
-
+accepted.dat
+input_data.file
+input_data_nunchucks_*.file
+rawdata_*
 
 
