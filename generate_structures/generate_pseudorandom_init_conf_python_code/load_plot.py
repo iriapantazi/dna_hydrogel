@@ -1,4 +1,4 @@
-#! /usr/bin/python2.7
+#! /usr/bin/python
 # Iria Pantazi 20180516
 #
 # since pickle does not work as expected, load_plot will load the plots from the 

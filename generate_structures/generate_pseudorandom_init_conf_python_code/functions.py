@@ -1,4 +1,4 @@
-#! /usr/bin/python2.7
+#! /usr/bin/python
 
 from importing_modules import *
 from  graphing_modules import *

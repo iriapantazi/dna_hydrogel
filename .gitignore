@@ -5,5 +5,5 @@ generate_structures/generate_rigid_rod_nunchakus/accepted.dat
 generate_structures/generate_rigid_rod_nunchakus/input_data.file
 generate_structures/generate_rigid_rod_nunchakus/input_data_nunchucks_*.file
 generate_structures/generate_rigid_rod_nunchakus/rawdata_*
-
+generate_structures/generate_pseudorandom_init_conf_python_code
 
