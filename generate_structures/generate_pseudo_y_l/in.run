@@ -1,0 +1,115 @@
+#
+# VARIABLES  
+#variable T         equal  0.80 # for mixing initial configuration
+variable T         index  0.15 0.20 0.25 0.26 0.28 0.30 0.32 0.34 0.36 0.37 0.40 0.45 0.50 0.60 0.70 
+variable num       index  1 #2 3
+variable ang_1     equal  100
+variable ang_2     equal  300
+variable ang_3     equal  1
+variable ang_4     equal  1
+variable N         equal  400
+variable L         equal  600
+variable box       equal  60
+variable damping   equal  1
+variable tstep     equal  0.005
+variable mix_steps equal  10000000
+variable mix_tau   equal  ${tstep}*${mix_steps}
+variable run_steps equal  20000000
+variable run_tau   equal  ${tstep}*${run_steps}
+
+# PARAMETERS    
+units lj
+atom_style molecular
+neighbor 0.4 bin
+neigh_modify every 1 delay 1 check yes
+comm_modify vel yes
+
+# READ  
+#read_data input_data_${N}_${L}_${box}_variate_angle_coefficient.file
+read_restart output_T_0.8_N_400_L_600_box_60_mix_tau_50000_num_1.restart
+
+#  BONDS 
+bond_style harmonic
+special_bonds lj 0 1 1   
+bond_coeff 1 300 0.96     # bead-bead bonds
+bond_coeff 2 300 0.56     # bead-patch bonds
+
+# ANGLES  
+angle_style harmonic
+angle_coeff 1 ${ang_1}  120 # for arms    in Y
+angle_coeff 2 ${ang_2}  180 # for beads   in Y
+angle_coeff 3 ${ang_3}  180 # for patches in L
+angle_coeff 4 ${ang_4}  180 # for patches in L
+
+# PAIR lj/cut --with interactions, to steady state
+pair_style lj/cut 1.12 
+pair_modify shift yes
+pair_coeff * * 0  0.0  0.0
+pair_coeff 1 1 1  1.0  1.12 # excluded volume
+pair_coeff 1 2 1  1.0  1.12 # excluded volume
+pair_coeff 2 2 1  1.0  1.12 # excluded volume
+pair_coeff 3 3 1  0.6  0.67 # repulsive
+pair_coeff 4 4 1  0.6  0.67 # repulsive
+pair_coeff 3 4 4  0.2  0.50 # attractive
+
+# THERMAL   
+timestep ${tstep}
+thermo   10000
+thermo_style custom step time temp press pe ke etotal vol 
+thermo_modify norm no
+reset_timestep 0
+
+# FIX
+fix 4 all nve
+fix 5 all langevin ${T} ${T} ${damping} 123456
+fix recen1 all recenter INIT INIT INIT
+
+# DUMP output and pairlocal files
+#dump  1  all custom 10000 output.dump id mol type x y z vx vy vz
+
+compute 1 all property/local patom1 patom2
+compute 2 all pair/local dist eng force
+dump 2 all local 1000 pairlocal.dump c_1[1] c_1[2] c_2[1] c_2[2] c_2[3]
+
+compute 5 all property/local aatom1 aatom2 aatom3
+compute 6 all angle/local theta eng
+dump 5 all local 1000 anglelocal.dump c_5[1] c_5[2] c_5[3] c_6[1] c_6[2]
+
+#compute 3 all property/local batom1 batom2
+#compute 4 all bond/local dist engpot
+#dump 3 all local 10000 bondlocal.dump c_3[1] c_3[2] c_4[1] c_4[2]
+
+
+## RUN for mixing
+#run ${mix_steps}
+#write_restart  output_T_${T}_N_${N}_L_${L}_box_${box}_mix_tau_${mix_tau}_num_1.restart
+#
+#run ${mix_steps}
+#write_restart  output_T_${T}_N_${N}_L_${L}_box_${box}_mix_tau_${mix_tau}_num_2.restart
+#
+#run ${mix_steps}
+#write_restart  output_T_${T}_N_${N}_L_${L}_box_${box}_mix_tau_${mix_tau}_num_3.restart
+#
+#run ${mix_steps}
+#write_restart  output_T_${T}_N_${N}_L_${L}_box_${box}_mix_tau_${mix_tau}_num_4.restart
+
+# RUN to steady state
+run ${run_steps}
+
+# write restart
+write_restart output.restart
+
+# SHELL commands
+shell mv output.restart      output_T_${T}_N_${N}_L_${L}_box_${box}_run_tau_${run_tau}_angs_1_${ang_1}_2_${ang_2}_3_${ang_3}_4_${ang_4}_num_${num}.restart
+shell mv pairlocal.dump   pairlocal_T_${T}_N_${N}_L_${L}_box_${box}_run_tau_${run_tau}_angs_1_${ang_1}_2_${ang_2}_3_${ang_3}_4_${ang_4}_num_${num}.dump
+shell mv anglelocal.dump anglelocal_T_${T}_N_${N}_L_${L}_box_${box}_run_tau_${run_tau}_angs_1_${ang_1}_2_${ang_2}_3_${ang_3}_4_${ang_4}_num_${num}.dump
+#shell mv output.dump         output_T_${T}_N_${N}_L_${L}_box_${box}_run_tau_${run_tau}_angs_1_${ang_1}_2_${ang_2}_3_${ang_3}_4_${ang_4}_num_${num}.dump
+#shell mv bondlocal.dump   bondlocal_T_${T}_N_${N}_L_${L}_box_${box}_run_tau_${run_tau}_angs_1_${ang_1}_2_${ang_2}_3_${ang_3}_4_${ang_4}_num_${num}.dump
+
+shell touch done_run.T_${T}
+
+clear
+
+next T
+jump in.run
+
