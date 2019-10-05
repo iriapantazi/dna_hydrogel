@@ -1,5 +1,11 @@
 #! /usr/bin/python 
 
+""" Written by: Iria Pantazi 
+    last updated: 2019/09/20 
+    Instructions: (soon)
+    Requirements: (soon)
+"""
+
 import time
 import argparse
 parser = argparse.ArgumentParser(description='generate nunchunks of 10 beads')
@@ -14,7 +20,7 @@ from numpy  import linalg as LA
 from random import random
 from pyquaternion import Quaternion
 
-
+# unchanged parameters for the beads:
 mass = 1.0 
 dist = 0.98
 rad  = 0.56
