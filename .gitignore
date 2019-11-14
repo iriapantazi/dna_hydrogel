@@ -1,6 +1,4 @@
 
-add_commit_push.sh
-
 generate_structures/generate_pseudo_rigid_rod_nunchakus/*.pyc
 generate_structures/generate_pseudo_rigid_rod_nunchakus/accepted.dat
 generate_structures/generate_pseudo_rigid_rod_nunchakus/input_data.file
