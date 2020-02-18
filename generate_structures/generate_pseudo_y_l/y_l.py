@@ -1,10 +1,8 @@
-#! /usr/bin/python
+#! /usr/bin/env python
 
 """ Written by: Iria Pantazi
     First created: 2018/01/10
     Last updated:  2019/10/05
-    Instructions:  (soon)
-    NB: -r -a -d have not yet been implemented
 """
 
 import time
@@ -12,8 +10,6 @@ import argparse
 parser = argparse.ArgumentParser(description='generate Y+L made of 10+6 beads')
 parser.add_argument("-g", "--generate", nargs="+", default=None, help="generate new configuration (Y, L, box).")
 parser.add_argument("-r", "--replot", nargs="+", help="Replots what has been written in the rawdata files.")
-parser.add_argument("-a", "--analyse", nargs="+", help="to be included shortly")
-parser.add_argument("-d", "--rdf", nargs="+", help="to be included shortly")
 args=parser.parse_args()
 
 import math
@@ -467,8 +463,6 @@ if args.generate:
                 ghost_lnk = gen_ghost_lnk(box_limit,dist,rad)
             flag1 = they_overlap_w_lnk(ghost_lnk,accpt_lnk,lnk,rad)        
             flag2 = they_overlap_w_mol(ghost_lnk,accpt_mol,mol,rad)
-        #print(flag1,flag2)
-        #print(attempt_num)
         #----if not overlapping then add them to the list of accepted------
         if ((flag1 == False) and (flag2 == False)):
             for i in range(6):
@@ -481,8 +475,6 @@ if args.generate:
     print("\n time for execution: "+str(end_time-start_time)+" seconds \n")
     #---------------------------plot all----------------------------------
     accpt_all = np.concatenate((accpt_mol,accpt_lnk))
-    #print(accpt_mol)
-    #print(accpt_all)
     plot_all(accpt_all,n_molecules,n_linkers,box_limit)    
     #--------------------------print all----------------------------------
     print_formatted_file(accpt_all,n_molecules,n_linkers,box_limit,mass)
@@ -493,6 +485,3 @@ if args.generate:
     src = "input_data.file"
     dst = "files/input_data_"+str(n_molecules)+"_"+str(n_linkers)+"_"+str(int(box_limit))+"_variate_angle_coefficient.file"
     copyfile(src,dst)
-
-
-
