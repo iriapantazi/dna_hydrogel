@@ -3,15 +3,18 @@
 
 This is a set of programs with codes for the generation of CG
 (Coarse Grained) initial configurations of building blocks that 
-are used MD (Molecular Dynamics) simulations of DNA hydrogels.
+are used in MD (Molecular Dynamics) simulations of DNA hydrogels.
+The generated files can be utilised along with 
+[LAMMPS](https://lammps.sandia.gov/). 
+Please refer to Prerequisites section for more information.
 
 ## **Introduction**
 
 Even if DNA is widely known as the molecule that encodes all biological information in living organisms, 
-it is also a building block that can be used in DNA Nanotechnology. 
+it is also a versatile building block that is used in DNA Nanotechnology. 
 DNA has been used as a structural material for nanoscale devices, and can be 
 used for biomedical applications, and therapeutics.
-A group of promissing materials for controlled drug delivery are polymeric 
+A group of promising materials for controlled drug delivery are polymeric 
 networks made entirely of DNA building blocks, called DNA hydrogels.
 A key objective in DNA-based material science is understanding and precisely 
 controlling the mechanical properties of 
@@ -23,27 +26,35 @@ described extensively in the publication:
 [Structural and Linear Elastic Properties of DNA Hydrogels by Coarse-Grained 
 Simulations](https://christopherjness.github.io/papers/acs.macromol.8b01948.pdf).
 
-The initial configurations that will be utilised in MD 
-simulations. These initial configurations are designed in a 
-CG fashion as described in the publication 
-[Structural and Linear Elastic Properties of DNA Hydrogels by Coarse-Grained Simulation](https://christopherjness.github.io/papers/acs.macromol.8b01948.pdf) by Xing et. al.
-This program includes further additions to the model designed by 
-Xing et. al., which are discussed in the publication 
+The scripts included in this repository are used to create initial configurations that 
+will be utilised in MD simulations of DNA hydrogels. These initial configurations are 
+designed in a CG fashion where beads represent parts of dsDNA (double stranded DNA), 
+and patches represent ssDNA (single stranded DNA). The building blocks of 
+DNA hydrogel are Y-shaped molecules of two types.
+Additional initial configurations of Y-shaped molecules and linear linkers can 
+also be derived by the scripts. This additional configuration is described by  
+Xing et. al., in the publication 
 [On the Role of Flexibility in Linker-Mediated DNA Hydrogels](https://arxiv.org/pdf/1909.05611.pdf) 
-by Stoev et. al.
-The generated files are designed so that they can be used 
-in MD simulations with [LAMMPS](https://lammps.sandia.gov/).
 
 ## **Getting started**
-The directories are arranged:
+The directories are arranged as follows:
 
 ## **Prerequisites**
+The generated files can be used in LAMMPS as an input file that 
+contains information on the geometry of the CG initial configuration.
+A *.run* file including information on the simulation is also required. 
+The *.run* file configures the appropriate Canonical Ensemble, with 
+the Langevin thermostat, hence no explicit solvent needs to be used. 
+Examples of *.run* files are not included yet.
+
+### **LAMMPS *.run* file**
+Description of the *.run* will be added in due time.
 
 ### **Python**
-The codes provided in this project are written in Python 3.6, 
+The codes provided in this repository are written in Python 3.6, 
 and support newer Python versions.
 It is advised that the user creates a virtual environment if 
-they want to make amendments to the code. 
+they want to make amendments to the codes.
 Packages for creating and using virtual environments are 
 [mkvirtualenv](https://realpython.com/python-virtual-environments-a-primer/) 
 and [pyenv](https://realpython.com/intro-to-pyenv/).
@@ -51,10 +62,9 @@ After initialising a virtual environment, with one of the aforementioned
 Python versions, the package requirements can be installed with the command 
 `pip install -r requirements.txt`.
 
-### **Molecular Dynamics in LAMMPS**
 
 ## **Information on input and output**
-The program provides a  variation of arguments that can be parsed. 
+The program provides two arguments that can be parsed. 
 These are:
 1. `-g` for generating a new configuration.
 2. `-r` for plotting an existing configuration.
@@ -64,10 +74,15 @@ These are:
 
 ## **Further Amendments**
 There is a number of corrections/amendments that will be done 
-in due time. These include:
+in due time. These are:
+- Merge scripts of the different initial configurations in one.
+- Finalise the possible 
+- Include example *.run* file.
+-  Include description of MD in LAMMPS.
+- Include tests.
 
 ## **Authors** 
 If you have any suggestions or corrections, 
-please contct [Iria Pantazi](iria.a.pantazi@gmail.com).
+please contact [Iria Pantazi](iria.a.pantazi@gmail.com).
 
 
