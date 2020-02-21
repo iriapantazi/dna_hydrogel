@@ -71,14 +71,23 @@ These are:
 
 
 ### **Example output**
+Creating a structure comprising 300 Y-shaped molecules in a cubic box 
+with edge length 30 is visualised in the following figure.
+![image](img/initialYshapes_100_150_30.png "Y=100 L=150 in box=30")
+A structure comprising 100 Y-shaped molecules with 150 linear 
+linkers in a box with edge 30 is presented in the following figure.
+![image](img/initialYshapes_300_30.png "Y=300 in box=30")
 
 ## **Further Amendments**
 There is a number of corrections/amendments that will be done 
 in due time. These are:
+- Information on running the scripts.
+- Discussion on randomness of initial configurations.
+- Discussion on reduced units.
 - Merge scripts of the different initial configurations in one.
 - Finalise the possible 
 - Include example *.run* file.
--  Include description of MD in LAMMPS.
+- Include description of MD in LAMMPS.
 - Include tests.
 
 ## **Authors** 
