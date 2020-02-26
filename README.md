@@ -38,6 +38,19 @@ Xing et. al., in the publication
 
 ## **Getting started**
 The directories are arranged as follows:
+.
+|-- generate_structures
+|   |-- generate_pseudo_rigid_rod/
+|   |   |--
+|   |-- generate_pseudo_y_l
+|   |   |--
+|   |-- generate_pseudo_y_y
+|   |   |--
+|-- img
+|-- LICENSE
+|-- README.md
+|-- tests
+
 
 ## **Prerequisites**
 The generated files can be used in LAMMPS as an input file that 
