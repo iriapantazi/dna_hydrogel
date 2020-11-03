@@ -1,4 +1,4 @@
-# **Coarse Grained initial configurations of DNA Hydrogels with Molecular Dynamics**
+# **Coarse Grained Description of DNA Hydrogels with Molecular Dynamics**
 
 ---
 
